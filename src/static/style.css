@@ -1,0 +1,81 @@
+body {
+    background-color: #FFFFFF;  /* Background white */
+    color: #000000;             /* Black text */
+    font-family: 'Arial', sans-serif;
+}
+
+header {
+    background-color: #14213D;  /* Dark blue for header */
+    color: #FCA311;             /* Bright orange for header text */
+    padding: 1rem;
+    margin-bottom: 2rem;
+}
+
+.navbar-brand {
+    color: #FCA311 !important;  /* Bright orange for branding */
+}
+
+h1, h2 {
+    color: #000000;             /* Black for headings */
+}
+
+p, label {
+    color: #14213D;             /* Dark blue for text */
+}
+
+a {
+    color: #FCA311;             /* Bright orange for links */
+    text-decoration: none;
+}
+
+a:hover {
+    color: #14213D;             /* Dark blue on hover */
+}
+
+
+input[type="text"] {
+    background-color: #E5E5E5;  /* Light gray for inputs */
+    color: #FFFFFF;             /* White text in inputs */
+    border: 1px solid #FCA311;  /* Bright orange border */
+    border-radius: 5px;
+    padding: 0.5rem;
+    width: 100%;
+    margin-bottom: 1rem;
+}
+
+button {
+    background-color: #14213D;  /* Dark blue for buttons */
+    border: none;
+    color: #FCA311;             /* Bright orange on buttons text*/
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #2e3a54;  /* White on hover */
+    color: #FCA311;             /* Black text on hover */
+}
+
+
+.code-snippet {
+    background-color: #33475b;  /* Dark blue for code blocks */
+    border: 1px solid #E5E5E5;  /* Light gray border */
+    color: #F5C26B;             /* Bright orange text */
+    padding: 1rem;
+    border-radius: 5px;
+    font-family: 'Consolas', sans-serif;
+}
+
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+footer {
+    background-color: #14213D;  /* Dark blue for footer */
+    color: #E5E5E5;             /* Light gray text */
+    text-align: center;
+    padding: 1rem;
+    margin-top: 2rem;
+}

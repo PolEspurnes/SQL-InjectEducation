@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <h2 class="text-center">Welcome to SQL InjectEducation</h2>
+  <p class="text-center">Choose an exercise below:</p>
+
+  <div class="mb-4">
+    <h3>SQLite Exercises</h3>
+    <ul class="list-group">
+      <li>
+        <a href="{{ url_for('exercise_sqlite1') }}">Simple Injection</a>
+      </li>
+      <li>
+        <a href="{{ url_for('exercise_sqlite1') }}">Simple Injection 2</a>
+      </li>
+      <!-- Add more SQLite exercises here -->
+    </ul>
+  </div>
+
+  <div class="mb-4">
+    <h3>PostgreSQL Exercises</h3>
+    <ul class="list-group">
+      <li>
+        <a href="{{ url_for('exercise_postgresql1') }}">PostgreSQL Injection</a>
+      </li>
+      <!-- Add more PostgreSQL exercises here -->
+    </ul>
+  </div>
+{% endblock %}
