@@ -1,71 +1,81 @@
-from flask import render_template, request, g
-import sqlite3
-import random
-import string
+from flask import render_template, request
+from utils.db_sqlite import *
 
 
-def get_db():
-    conn = sqlite3.connect('exercises.db')
-    return conn.cursor()
-    
 
 def sqlite_exercise1():
-    db = get_db()
+    result = ""
+    query = ""
+
     exercise = {
         'name': 'Simple Injection',
         'description': 'Try a basic SQL injection on the users table and get the flag from the flag user.'
     }
 
-    result = ""
-    query = ""
+
     if request.method == 'POST':
+        db = get_db()
+        cursor = db.cursor()
+
+        # User input
         if 'user_input' in request.form:
             user_input = request.form['user_input']
-            # Vulnerable SQL query for educational purposes
+
             query = f"SELECT * FROM exercise1 WHERE username = '{user_input}'"
             try:
-                cur = db.execute(query)
-                result = cur.fetchall()
+                result = cursor.execute(query).fetchall()
             except sqlite3.Error as e:
                 result = f"Error: {e}"
 
-            
+        # Flag input
         elif 'flag_input' in request.form:
-            flag = request.form['flag_input']
-            # Process the flag as needed (e.g., store it, check it, etc.)
-            print(f"Flag submitted: {flag}")
-            # You can add specific flag handling logic here if needed
-            result = f"Congratulations! Level solved. {flag}"
+            flag_input = request.form['flag_input']
+            result = handle_flag(cursor, 1, flag_input)
 
-        return render_template('exercise.html', exercise=exercise, result=result, query=query)
 
-    return render_template('exercise.html', exercise=exercise)
+        cursor.close()
+        db.close()
+        return render_template('sqlite_exercise1.html', exercise=exercise, result=result, query=query)
+
+    return render_template('sqlite_exercise1.html', exercise=exercise)
 
 
 def sqlite_exercise2():
-    db = get_db()
+    result = ""
+    query = ""
+
     exercise = {
         'name': 'Simple Login Bypass Injection',
-        'description': 'Try a basic SQL injection on a login panel and bypass the authentication.'
+        'description': 'Try a basic SQL injection on a login panel and bypass the authentication to login as "admin".'
     }
 
     if request.method == 'POST':
-        user_input = request.form['user_input']
+        db = get_db()
+        cursor = db.cursor()
+
+        username_input = request.form['username'] if 'username' in request.form else ''
+        password_input = get_md5(request.form['password']) if 'password' in request.form else ''
+
         # Vulnerable SQL query for educational purposes
-        query = f"SELECT * FROM users WHERE username = '{user_input}'"
+        query = f"SELECT * FROM exercise1 WHERE (username = '{username_input}') AND (password = '{password_input}')"
         try:
-            cur = db.execute(query)
+            cur = cursor.execute(query)
             result = cur.fetchall()
         except sqlite3.Error as e:
             result = f"Error: {e}"
 
-        return render_template('exercise.html', exercise=exercise, result=result, query=query)
+        cursor.close()
+        db.close()
+        return render_template('sqlite_exercise2.html', exercise=exercise, result=result, query=query)
 
-    return render_template('exercise.html', exercise=exercise)
+
+    return render_template('sqlite_exercise2.html', exercise=exercise)
 
 
 def sqlite_exercise3():
     db = get_db()
+    cursor = db.cursor()
+
     exercise = {
         'name': 'Login Bypass Injection',
         'description': 'Try a basic SQL injection on a login panel and bypass the authentication.'
@@ -77,65 +87,21 @@ def sqlite_exercise3():
             # Vulnerable SQL query for educational purposes
             query = f"SELECT * FROM users WHERE username = '{user_input}'"
             try:
-                cur = db.execute(query)
+                cur = cursor.execute(query)
                 result = cur.fetchall()
             except sqlite3.Error as e:
                 result = f"Error: {e}"
 
-            
         elif 'flag_submit' in request.form:
             flag = request.form.get('flag', '')
             # Process the flag as needed (e.g., store it, check it, etc.)
             print(f"Flag submitted: {flag}")
-            # You can add specific flag handling logic here if needed
             result = "Congratulations! Level solved."
 
+        cursor.close()
+        db.close()
         return render_template('exercise.html', exercise=exercise, result=result, query=query)
 
+    cursor.close()
+    db.close()
     return render_template('exercise.html', exercise=exercise)
-
-
-
-def restart_database():
-    print("Restaring sqlite db")
-    db = get_db()
-    # Reset table
-    db.execute('DROP TABLE IF EXISTS exercises;')
-    
-    # Create a table for exercises
-    db.execute('''
-        CREATE TABLE exercises (
-            id INTEGER PRIMARY KEY,
-            name TEXT NOT NULL,
-            table_name TEXT NOT NULL,
-            field_name TEXT NOT NULL,
-            description TEXT NOT NULL
-        )
-    ''')
-
-    # Add a sample exercise
-    db.execute('''
-        INSERT INTO exercises (name, table_name, field_name, description) 
-        VALUES ('Simple Injection', 'users', 'username', 'Try a basic SQL injection on the users table.')
-    ''')
-
-    # Reset table
-    db.execute('DROP TABLE IF EXISTS exercise1;')
-    
-    ## Create a sample users table in the same database:
-    db.execute('''
-        CREATE TABLE exercise1 (
-            id INTEGER PRIMARY KEY,
-            username TEXT NOT NULL,
-            password TEXT NOT NULL
-        )
-    ''')
-
-    res = ''.join(random.choices(string.ascii_uppercase + string.digits, k=8))
-    flag = 'FLAG{'+''.join(random.choices(string.ascii_uppercase + string.digits, k=32))+'}'
-    db.execute(f'''
-        INSERT INTO exercise1 (username, password) VALUES
-        ('admin', '35add69719391a43779dbf513aa17001'),
-        ('user', 'eef4d9dafcf027232915d5d41d51741f'),
-        ('flag_{res}', '{flag}')
-    ''')

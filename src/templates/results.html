@@ -1,0 +1,10 @@
+{% if result %}
+    <div class="mt-4">
+      <h3>Results:</h3>
+      <pre class="code-snippet">{{ result }}</pre>
+      {% if query %}
+      <h3>Executed Query:</h3>
+      <pre class="code-snippet">{{ query }}</pre>
+      {% endif %}
+    </div>
+{% endif %}

@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block content %}
+  <h2>{{ exercise.name }}</h2>
+  <p>{{ exercise.description }}</p>
+  <form method="POST">
+    <div class="form-group">
+      <label for="user_input">Input:</label>
+      <input type="text" id="user_input" name="user_input" class="form-control">
+    </div>
+    <button type="submit">Submit</button>
+  </form>
+
+{% include "flag_input.html" %}  
+
+{% include "results.html" %}
+
+{% endblock %}

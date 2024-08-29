@@ -33,9 +33,8 @@ a:hover {
 }
 
 
-input[type="text"] {
+input[type="text"], input[type="password"] {
     background-color: #E5E5E5;  /* Light gray for inputs */
-    color: #FFFFFF;             /* White text in inputs */
     border: 1px solid #FCA311;  /* Bright orange border */
     border-radius: 5px;
     padding: 0.5rem;

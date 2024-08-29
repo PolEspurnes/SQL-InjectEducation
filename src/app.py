@@ -1,5 +1,7 @@
 from flask import Flask, render_template
-from exercises.sqlite_exercises import restart_database, sqlite_exercise1
+from exercises.sqlite_exercises import sqlite_exercise1, sqlite_exercise2
+from utils.db_sqlite import restart_database
+import sys, signal
 
 app = Flask(__name__)
 
@@ -8,14 +10,22 @@ app = Flask(__name__)
 def index():
     return render_template('index.html')
 
+
 @app.route('/exercise/sqlite1', methods=['GET', 'POST'])
-def exercise_sqlite1():
+def sqlite1():
     return sqlite_exercise1()
 
+
+@app.route('/exercise/sqlite2', methods=['GET', 'POST'])
+def sqlite2():
+    return sqlite_exercise2()
+
+
 @app.route('/exercise/postgresql1', methods=['GET', 'POST'])
-def exercise_postgresql1():
+def postgresql1():
     # Temporary
     return render_template('index.html')
+
 
 if __name__ == '__main__':
     restart_database()
