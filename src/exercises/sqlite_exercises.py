@@ -149,3 +149,77 @@ def sqlite_exercise4():
         return render_template('sqlite_exercise4.html', exercise=exercise, result=result, query=query)
 
     return render_template('sqlite_exercise4.html', exercise=exercise)
+
+
+def sqlite_exercise5():
+    result = ""
+    query = ""
+
+    exercise = {
+        'name': 'Union-based SQL Injection - Retrieving the sqlite version',
+        'description': 'Do a Union-based SQL Injection and read the SQLite version. Send the version as the flag.',
+        'hint': 'How can you check the database version in SQLite?'
+    }
+
+    if request.method == 'POST':
+        db = get_db()
+        cursor = db.cursor()
+
+        # User input
+        if 'user_input' in request.form:
+            user_input = request.form['user_input']
+
+            query = f"SELECT * FROM exercise4 WHERE name LIKE '%{user_input}%'"
+            try:
+                result = cursor.execute(query).fetchall()
+            except sqlite3.Error as e:
+                result = f"Error: {e}"
+
+        # Flag input
+        elif 'flag_input' in request.form:
+            flag_input = request.form['flag_input']
+            result = handle_flag(cursor, 5, flag_input)
+
+
+        cursor.close()
+        db.close()
+        return render_template('sqlite_exercise4.html', exercise=exercise, result=result, query=query)
+
+    return render_template('sqlite_exercise4.html', exercise=exercise)
+
+
+def sqlite_exercise6():
+    result = ""
+    query = ""
+
+    exercise = {
+        'name': 'Union-based SQL Injection - Retrieving data from other tables',
+        'description': 'Do a Union-based SQL Injection and find the flag contained in the secret table of exercise 6.',
+        'hint': 'First find the name of the table, then the columns\' names and finally the flag.'
+    }
+
+    if request.method == 'POST':
+        db = get_db()
+        cursor = db.cursor()
+
+        # User input
+        if 'user_input' in request.form:
+            user_input = request.form['user_input']
+
+            query = f"SELECT * FROM exercise4 WHERE name LIKE '%{user_input}%'"
+            try:
+                result = cursor.execute(query).fetchall()
+            except sqlite3.Error as e:
+                result = f"Error: {e}"
+
+        # Flag input
+        elif 'flag_input' in request.form:
+            flag_input = request.form['flag_input']
+            result = handle_flag(cursor, 6, flag_input)
+
+
+        cursor.close()
+        db.close()
+        return render_template('sqlite_exercise4.html', exercise=exercise, result=result, query=query)
+
+    return render_template('sqlite_exercise4.html', exercise=exercise)

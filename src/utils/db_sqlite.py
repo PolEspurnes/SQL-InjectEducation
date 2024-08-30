@@ -10,6 +10,8 @@ base_dir = os.path.dirname(os.path.abspath(__file__))
 # Construct the full path to the database file
 db_path = os.path.join(base_dir, 'exercises.db')
 
+exercise6_column = ""
+
 
 def get_db():
     global db_path
@@ -18,6 +20,8 @@ def get_db():
 
 
 def restart_database():
+    global exercise6_column
+
     print("Restarting SQLite database")
     db = get_db()
     cursor = db.cursor()
@@ -27,6 +31,7 @@ def restart_database():
     cursor.execute('DROP TABLE IF EXISTS exercise3;')
     cursor.execute('DROP TABLE IF EXISTS exercise4;')
     cursor.execute('DROP TABLE IF EXISTS secret_exercise4;')
+    cursor.execute('DROP TABLE IF EXISTS exercise6_super_secret_table;')
     
     cursor.execute('''
         CREATE TABLE exercise1 (
@@ -104,6 +109,22 @@ def restart_database():
     ''')
 
 
+    exercise6_column = 'column_'+''.join(random.choices(string.ascii_lowercase + string.digits, k=8))
+    flag = 'FLAG{' + ''.join(random.choices(string.ascii_uppercase + string.ascii_lowercase + string.digits, k=32)) + '}'
+    cursor.execute(f'''
+        CREATE TABLE exercise6_super_secret_table (
+            id INTEGER PRIMARY KEY,
+            {exercise6_column} TEXT
+        )
+    ''')
+
+    cursor.execute(f'''
+        INSERT INTO exercise6_super_secret_table ({exercise6_column}) VALUES 
+        ('{flag}')
+    ''')
+
+
+
     # Commit changes and close the connection
     db.commit()
     cursor.close()
@@ -111,6 +132,7 @@ def restart_database():
 
 
 def handle_flag(cursor, exercise, flag_input):
+    global exercise6_column
     try:
         match exercise:
             case 1:
@@ -123,6 +145,14 @@ def handle_flag(cursor, exercise, flag_input):
 
             case 4:
                 flag = cursor.execute("SELECT secret_value FROM secret_exercise4 WHERE secret_info = 'flag'").fetchone()[0]
+                return "Congratulations! Level solved." if (flag == flag_input) else "Wrong flag."
+
+            case 5:
+                flag = cursor.execute("SELECT sqlite_version()").fetchone()[0]
+                return "Congratulations! Level solved." if (flag == flag_input) else "Wrong flag."
+
+            case 6:
+                flag = cursor.execute("SELECT "+exercise6_column+" FROM exercise6_super_secret_table").fetchone()[0]
                 return "Congratulations! Level solved." if (flag == flag_input) else "Wrong flag."
 
             case _:
