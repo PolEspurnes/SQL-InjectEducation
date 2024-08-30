@@ -22,10 +22,11 @@ def restart_database():
     db = get_db()
     cursor = db.cursor()
 
-    # Reset exercise1 table
+    # Reset tables
     cursor.execute('DROP TABLE IF EXISTS exercise1;')
+    cursor.execute('DROP TABLE IF EXISTS exercise3;')
     
-    # Create a sample exercise1 table
+    # Create the exercise1 table
     cursor.execute('''
         CREATE TABLE exercise1 (
             id INTEGER PRIMARY KEY,
@@ -34,7 +35,7 @@ def restart_database():
         )
     ''')
 
-    # Insert sample data
+    # Insert data into exercise1
     res = ''.join(random.choices(string.ascii_uppercase + string.digits, k=8))
     flag = 'FLAG{' + ''.join(random.choices(string.ascii_uppercase + string.digits, k=32)) + '}'
     cursor.execute(f'''
@@ -42,6 +43,31 @@ def restart_database():
         ('user', 'eef4d9dafcf027232915d5d41d51741f'),
         ('admin', '35add69719391a43779dbf513aa17001'),
         ('flag_{res}', '{flag}')
+    ''')
+
+    # Create the exercise1 table
+    cursor.execute('''
+        CREATE TABLE exercise3 (
+            id INTEGER PRIMARY KEY,
+            job_title  TEXT NOT NULL
+        )
+    ''')
+
+    # Insert data into exercise3
+    flag = 'FLAG{' + ''.join(random.choices(string.ascii_uppercase + string.digits, k=32)) + '}'
+    cursor.execute(f'''
+        INSERT INTO exercise3 (job_title, number_of_employees) VALUES 
+        ('Cybersecurity Analyst'),
+        ('Cybersecurity Engineer'),
+        ('Cybersecurity Consultant'),
+        ('Cybersecurity Architect'),
+        ('Cybersecurity Specialist'),
+        ('Cybersecurity Manager'),
+        ('Cybersecurity Director'),
+        ('Cybersecurity Researcher'),
+        ('Cybersecurity Incident Responder'),
+        ('Cybersecurity Threat Analyst'),
+        ('{flag}')
     ''')
 
 
@@ -57,6 +83,11 @@ def handle_flag(cursor, exercise, flag_input):
             case 1:
                 flag = cursor.execute("SELECT password FROM exercise1 WHERE username LIKE 'flag_%'").fetchone()[0]
                 return "Congratulations! Level solved." if (flag == flag_input) else "Wrong flag."
+
+            case 3:
+                flag = cursor.execute("SELECT job_title FROM exercise3 WHERE job_title LIKE 'FLAG{%'").fetchone()[0]
+                return "Congratulations! Level solved." if (flag == flag_input) else "Wrong flag."
+
             case _:
                 return "What is happening?"
                 
