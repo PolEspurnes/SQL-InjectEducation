@@ -25,8 +25,9 @@ def restart_database():
     # Reset tables
     cursor.execute('DROP TABLE IF EXISTS exercise1;')
     cursor.execute('DROP TABLE IF EXISTS exercise3;')
+    cursor.execute('DROP TABLE IF EXISTS exercise4;')
+    cursor.execute('DROP TABLE IF EXISTS secret_exercise4;')
     
-    # Create the exercise1 table
     cursor.execute('''
         CREATE TABLE exercise1 (
             id INTEGER PRIMARY KEY,
@@ -35,9 +36,8 @@ def restart_database():
         )
     ''')
 
-    # Insert data into exercise1
-    res = ''.join(random.choices(string.ascii_uppercase + string.digits, k=8))
-    flag = 'FLAG{' + ''.join(random.choices(string.ascii_uppercase + string.digits, k=32)) + '}'
+    res = ''.join(random.choices(string.ascii_lowercase + string.digits, k=8))
+    flag = 'FLAG{' + ''.join(random.choices(string.ascii_uppercase + string.ascii_lowercase + string.digits, k=32)) + '}'
     cursor.execute(f'''
         INSERT INTO exercise1 (username, password) VALUES
         ('user', 'eef4d9dafcf027232915d5d41d51741f'),
@@ -45,7 +45,7 @@ def restart_database():
         ('flag_{res}', '{flag}')
     ''')
 
-    # Create the exercise1 table
+
     cursor.execute('''
         CREATE TABLE exercise3 (
             id INTEGER PRIMARY KEY,
@@ -53,10 +53,9 @@ def restart_database():
         )
     ''')
 
-    # Insert data into exercise3
-    flag = 'FLAG{' + ''.join(random.choices(string.ascii_uppercase + string.digits, k=32)) + '}'
+    flag = 'FLAG{' + ''.join(random.choices(string.ascii_uppercase + string.ascii_lowercase + string.digits, k=32)) + '}'
     cursor.execute(f'''
-        INSERT INTO exercise3 (job_title, number_of_employees) VALUES 
+        INSERT INTO exercise3 (job_title) VALUES 
         ('Cybersecurity Analyst'),
         ('Cybersecurity Engineer'),
         ('Cybersecurity Consultant'),
@@ -68,6 +67,40 @@ def restart_database():
         ('Cybersecurity Incident Responder'),
         ('Cybersecurity Threat Analyst'),
         ('{flag}')
+    ''')
+
+
+    cursor.execute('''
+        CREATE TABLE exercise4 (
+            user_id INTEGER PRIMARY KEY,
+            name TEXT,
+            email TEXT
+        )
+    ''')
+
+    cursor.execute('''
+        CREATE TABLE secret_exercise4 (
+            secret_id INTEGER PRIMARY KEY,
+            secret_info TEXT,
+            secret_value TEXT
+        )
+    ''')
+
+    flag = 'FLAG{' + ''.join(random.choices(string.ascii_uppercase + string.ascii_lowercase + string.digits, k=32)) + '}'
+    cursor.execute(f'''
+        INSERT INTO exercise4 (name, email) VALUES 
+        ('Alice Johnson', 'alice@example.com'),
+        ('Bob Smith', 'bob@example.com'),
+        ('Charlie Brown', 'charlie@example.com'),
+        ('Diana Prince', 'diana@example.com');
+    ''')
+
+    cursor.execute(f'''
+        INSERT INTO secret_exercise4 (secret_info, secret_value) VALUES 
+        ('Secret API Key', '12345-ABCDE'),
+        ('Admin Password', 'admin123'),
+        ('flag', '{flag}'),
+        ('Encryption Key', 'abcdefghijklmnopqrstuvwxyz')
     ''')
 
 
@@ -86,6 +119,10 @@ def handle_flag(cursor, exercise, flag_input):
 
             case 3:
                 flag = cursor.execute("SELECT job_title FROM exercise3 WHERE job_title LIKE 'FLAG{%'").fetchone()[0]
+                return "Congratulations! Level solved." if (flag == flag_input) else "Wrong flag."
+
+            case 4:
+                flag = cursor.execute("SELECT secret_value FROM secret_exercise4 WHERE secret_info = 'flag'").fetchone()[0]
                 return "Congratulations! Level solved." if (flag == flag_input) else "Wrong flag."
 
             case _:

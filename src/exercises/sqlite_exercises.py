@@ -111,3 +111,41 @@ def sqlite_exercise3():
         return render_template('sqlite_exercise3.html', exercise=exercise, result=result, query=query)
 
     return render_template('sqlite_exercise3.html', exercise=exercise)
+
+
+
+def sqlite_exercise4():
+    result = ""
+    query = ""
+
+    exercise = {
+        'name': 'Union-based SQL Injection',
+        'description': 'Try a basic Union-based SQL Injection and read the contents of table secret_exercise4.',
+        'hint': 'Tables exercise4 and secret_exercise4 have the same amount of columns and column types.'
+    }
+
+    if request.method == 'POST':
+        db = get_db()
+        cursor = db.cursor()
+
+        # User input
+        if 'user_input' in request.form:
+            user_input = request.form['user_input']
+
+            query = f"SELECT * FROM exercise4 WHERE name LIKE '%{user_input}%'"
+            try:
+                result = cursor.execute(query).fetchall()
+            except sqlite3.Error as e:
+                result = f"Error: {e}"
+
+        # Flag input
+        elif 'flag_input' in request.form:
+            flag_input = request.form['flag_input']
+            result = handle_flag(cursor, 4, flag_input)
+
+
+        cursor.close()
+        db.close()
+        return render_template('sqlite_exercise4.html', exercise=exercise, result=result, query=query)
+
+    return render_template('sqlite_exercise4.html', exercise=exercise)
