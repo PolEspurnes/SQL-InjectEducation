@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block content %}
+  <h2>{{ exercise.name }}</h2>
+  <p>{{ exercise.description }}</p>
+  <p style="color:green;">{{ exercise.hint }}</p>
+  <form method="GET">
+    <div class="form-group">
+      <label for="user_input">Check stock:</label>
+      <select class="form-select" name="user_input" placeholder="Select a product">
+        {% for product in products %}
+          <option value="{{ product[0] }}">{{ product[1] }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <button type="submit">Submit</button>
+  </form>
+
+{% include "flag_input.html" %}  
+
+{% include "results.html" %}
+
+{% endblock %}
+

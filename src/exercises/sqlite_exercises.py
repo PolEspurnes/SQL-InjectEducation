@@ -223,3 +223,50 @@ def sqlite_exercise6():
         return render_template('sqlite_exercise4.html', exercise=exercise, result=result, query=query)
 
     return render_template('sqlite_exercise4.html', exercise=exercise)
+
+
+def sqlite_exercise7():
+    result = ""
+    query = ""
+
+    exercise = {
+        'name': 'Blind SQL Injection (Boolean-Based)',
+        'description': 'Do a Boolean-Based SQL Injection and read the SQLite version. Send the version as the flag.',
+        'hint': 'Search information about the SUBSTR() function.'
+    }
+
+    db = get_db()
+    cursor = db.cursor()
+    products = cursor.execute("SELECT id, product_name FROM exercise7").fetchall()
+
+    
+
+    if request.method == 'POST' and 'flag_input' in request.form:
+        flag_input = request.form['flag_input']
+        result = handle_flag(cursor, 5, flag_input)  # Solved like exercise 5
+
+
+        cursor.close()
+        db.close()
+        return render_template('sqlite_exercise7.html', exercise=exercise, result=result, query=query, products=products)
+
+    elif request.method == 'GET' and 'user_input' in request.args:
+        user_input = request.args['user_input']
+        query = f"SELECT stock FROM exercise7 WHERE id = {user_input}"
+        try:
+            fetched = cursor.execute(query).fetchone()
+            if fetched:
+                stock = fetched[0]
+                result = "In stock." if (stock > 0) else "Product out of stock."
+            else:
+                result = "Unknown product ID."
+        except sqlite3.Error as e:
+            result = f"Error: {e}"
+
+        cursor.close()
+        db.close()
+        return render_template('sqlite_exercise7.html', exercise=exercise, result=result, query=query, products=products)
+
+
+
+    return render_template('sqlite_exercise7.html', exercise=exercise, products=products)

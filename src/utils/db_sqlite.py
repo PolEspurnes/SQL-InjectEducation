@@ -32,6 +32,7 @@ def restart_database():
     cursor.execute('DROP TABLE IF EXISTS exercise4;')
     cursor.execute('DROP TABLE IF EXISTS secret_exercise4;')
     cursor.execute('DROP TABLE IF EXISTS exercise6_super_secret_table;')
+    cursor.execute('DROP TABLE IF EXISTS exercise7;')
     
     cursor.execute('''
         CREATE TABLE exercise1 (
@@ -123,6 +124,23 @@ def restart_database():
         ('{flag}')
     ''')
 
+
+    cursor.execute('''
+        CREATE TABLE exercise7 (
+            id INTEGER PRIMARY KEY,
+            product_name TEXT NOT NULL,
+            stock INTEGER NOT NULL
+        );
+    ''')
+
+    cursor.execute('''
+        INSERT INTO exercise7 (id, product_name, stock) VALUES
+        (1, 'Laptop', 0),
+        (2, 'Smartphone', 12),
+        (3, 'Tablet', 0),
+        (4, 'Headphones', 20),
+        (5, 'Smartwatch', 0);
+    ''')
 
 
     # Commit changes and close the connection
