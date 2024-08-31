@@ -3,15 +3,15 @@ The SQL InjectEducation Tool is an educational resource designed to help users l
 
 
 ## Installation
-0. Make sure you have Python 3 installed.
+*Make sure you have Python 3 installed.*
 
-1. Create a virtual environment (optional but recommended):
+0. Clone the repository
 ```bash
-python -m venv venv
-source venv/bin/activate  # On Windows, use `venv\Scripts\activate`
+git clone https://github.com/PolEspurnes/SQL-InjectEducation.git
+cd SQL-InjectEducation
 ```
 
-2. Install Flask and SQLite:
+1. Install Flask and SQLite:
 ```bash
 pip install flask sqlite3
 ```
