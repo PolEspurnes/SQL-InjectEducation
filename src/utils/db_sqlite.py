@@ -16,7 +16,9 @@ exercise6_column = ""
 def get_db():
     global db_path
     # Return a new connection for each request
-    return sqlite3.connect(db_path)
+    conn = sqlite3.connect(db_path)
+    conn.enable_load_extension(True)
+    return conn
 
 
 def restart_database():
@@ -33,6 +35,7 @@ def restart_database():
     cursor.execute('DROP TABLE IF EXISTS secret_exercise4;')
     cursor.execute('DROP TABLE IF EXISTS exercise6_super_secret_table;')
     cursor.execute('DROP TABLE IF EXISTS exercise7;')
+    cursor.execute('DROP TABLE IF EXISTS exercise9;')
     
     cursor.execute('''
         CREATE TABLE exercise1 (
@@ -143,6 +146,27 @@ def restart_database():
     ''')
 
 
+    cursor.execute('''
+        CREATE TABLE exercise9 (
+            id INTEGER PRIMARY KEY,
+            category TEXT,
+            product_name TEXT,
+            price REAL,
+            secret_flag TEXT
+        );
+    ''')
+
+    cursor.execute('''
+        INSERT INTO exercise9 (id, category, product_name, price, secret_flag) VALUES
+        (1, 'Hardware', 'Laptop', 999.99, NULL),
+        (2, 'Hardware', 'Smartphone', 699.99, NULL),
+        (3, 'Hardware', 'Tablet', 399.99, NULL),
+        (4, 'Software', 'Burp Suite PRO', 199.99, NULL),
+        (5, 'Software', 'Microsoft 365', 299.99, NULL),
+        (6, 'Software', 'Adobe Creative Cloud', 499.99, 'FLAG{Error_Based_SQLi_Success}');
+    ''')
+
+
     # Commit changes and close the connection
     db.commit()
     cursor.close()
@@ -171,6 +195,10 @@ def handle_flag(cursor, exercise, flag_input):
 
             case 6:
                 flag = cursor.execute("SELECT "+exercise6_column+" FROM exercise6_super_secret_table").fetchone()[0]
+                return "Congratulations! Level solved." if (flag == flag_input) else "Wrong flag."
+
+            case 9:
+                flag = cursor.execute("SELECT secret_flag FROM exercise9 WHERE id = 6").fetchone()[0]
                 return "Congratulations! Level solved." if (flag == flag_input) else "Wrong flag."
 
             case _:

@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block content %}
+  <h2>{{ exercise.name }}</h2>
+  <p>{{ exercise.description }}</p>
+  <p style="color:green;">{{ exercise.hint }}</p>
+  <form method="GET">
+    <div class="form-group">
+      <p>Filter products:</p>
+      <div class="form-check form-check-inline">
+        <input class="form-check-input" type="radio" name="filter" id="inlineRadio1" value="Hardware">
+        <label class="form-check-label" for="inlineRadio1">Hardware</label>
+      </div>
+      <div class="form-check form-check-inline">
+        <input class="form-check-input" type="radio" name="filter" id="inlineRadio2" value="Software">
+        <label class="form-check-label" for="inlineRadio2">Software</label>
+      </div>
+    </div>
+    <button type="submit">Submit</button>
+  </form>
+
+<table>
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Price</th>
+            <th>Category</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for product in products %}
+            <tr>
+                <td>{{ product[0] }}</td>
+                <td>{{ product[1] }}</td>
+                <td>{{ product[2] }}</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% include "flag_input.html" %}  
+
+{% include "results.html" %}
+
+{% endblock %}
+

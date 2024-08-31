@@ -1,5 +1,5 @@
 from flask import Flask, render_template
-from exercises.sqlite_exercises import sqlite_exercise1, sqlite_exercise2, sqlite_exercise3, sqlite_exercise4, sqlite_exercise5, sqlite_exercise6, sqlite_exercise7
+from exercises.sqlite_exercises import sqlite_exercise1, sqlite_exercise2, sqlite_exercise3, sqlite_exercise4, sqlite_exercise5, sqlite_exercise6, sqlite_exercise7, sqlite_exercise8, sqlite_exercise9
 from utils.db_sqlite import restart_database
 import sys, signal
 
@@ -45,6 +45,15 @@ def sqlite6():
 def sqlite7():
     return sqlite_exercise7()
 
+
+@app.route('/exercise/sqlite8', methods=['GET', 'POST'])
+def sqlite8():
+    return sqlite_exercise8()
+
+
+@app.route('/exercise/sqlite9', methods=['GET', 'POST'])
+def sqlite9():
+    return sqlite_exercise9()
 
 
 @app.route('/exercise/postgresql1', methods=['GET', 'POST'])
