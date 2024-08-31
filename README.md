@@ -1,5 +1,5 @@
 # SQL-InjectEducation
-SQL Injection guided labs to learn the basics.
+The SQL InjectEducation Tool is an educational resource designed to help users learn and practice SQL injection techniques using an SQLite database. It features **10 levels with progressive difficulty**, each focusing on **different types of SQL injection vulnerabilities** and attack methods.
 
 
 ## Installation
@@ -22,23 +22,9 @@ cd src
 python app.py
 ```
 
-## More Info
+## More Information
+- **Lightweight and Easy to Install**: The use of Flask and SQLite ensures that the tool is easy to set up and run on any machine with minimal configuration.
 
-### Source Code Directory structure
-```csharp
-sql_injecteducation/
-│
-├── app.py              # Main Flask application
-├── exercises.db        # SQLite database
-├── exercises/          # Directory for exercise files
-│   ├── sqlite_exercises.py    # Code for SQLite exercise 1
-│   └── postgresql_exercises.py # Code for PostgreSQL exercise 1
-├── static/             # For static files (e.g., CSS, JS)
-│   └── style.css       # Custom CSS
-├── templates/          # For HTML templates
-│   ├── base.html       # Base template
-│   ├── index.html      # Homepage with sections
-│   └── exercise.html   # Exercise page
-└── venv/               # Virtual environment (optional)
+- **Interactive Learning**: Provides hands-on experience with SQL injection techniques with simplified but real examples. The executed queries can always be checked, allowing the user to properly understand what is being executed.
 
-```
+- **Notes and Methodology Section**: Provides detailed guidance and best practices for each level. It is as important to solve the level as it is to understand why the solution worked.

@@ -36,6 +36,7 @@ def restart_database():
     cursor.execute('DROP TABLE IF EXISTS exercise6_super_secret_table;')
     cursor.execute('DROP TABLE IF EXISTS exercise7;')
     cursor.execute('DROP TABLE IF EXISTS exercise9;')
+    cursor.execute('DROP TABLE IF EXISTS exercise10;')
     
     cursor.execute('''
         CREATE TABLE exercise1 (
@@ -149,6 +150,27 @@ def restart_database():
     cursor.execute('''
         CREATE TABLE exercise9 (
             id INTEGER PRIMARY KEY,
+            product_name TEXT,
+            creation_date DATETIME DEFAULT CURRENT_TIMESTAMP,
+            hidden_column TEXT
+        );
+    ''')
+
+    flag = 'FLAG{' + ''.join(random.choices(string.ascii_uppercase + string.ascii_lowercase + string.digits, k=32)) + '}'
+    cursor.execute(f'''
+        INSERT INTO exercise9 (product_name, hidden_column) VALUES
+        ('Laptop', NULL),
+        ('Smartphone', NULL),
+        ('Tablet', '{flag}'),
+        ('Burp Suite PRO', NULL),
+        ('Microsoft 365', NULL),
+        ('Adobe Creative Cloud', NULL);
+    ''')
+
+
+    cursor.execute('''
+        CREATE TABLE exercise10 (
+            id INTEGER PRIMARY KEY,
             category TEXT,
             product_name TEXT,
             price REAL,
@@ -156,14 +178,15 @@ def restart_database():
         );
     ''')
 
-    cursor.execute('''
-        INSERT INTO exercise9 (id, category, product_name, price, secret_flag) VALUES
+    flag = 'FLAG{' + ''.join(random.choices(string.ascii_uppercase + string.ascii_lowercase + string.digits, k=32)) + '}'
+    cursor.execute(f'''
+        INSERT INTO exercise10 (id, category, product_name, price, secret_flag) VALUES
         (1, 'Hardware', 'Laptop', 999.99, NULL),
         (2, 'Hardware', 'Smartphone', 699.99, NULL),
         (3, 'Hardware', 'Tablet', 399.99, NULL),
         (4, 'Software', 'Burp Suite PRO', 199.99, NULL),
         (5, 'Software', 'Microsoft 365', 299.99, NULL),
-        (6, 'Software', 'Adobe Creative Cloud', 499.99, 'FLAG{Error_Based_SQLi_Success}');
+        (6, 'Software', 'Adobe Creative Cloud', 499.99, '{flag}');
     ''')
 
 
@@ -198,7 +221,11 @@ def handle_flag(cursor, exercise, flag_input):
                 return "Congratulations! Level solved." if (flag == flag_input) else "Wrong flag."
 
             case 9:
-                flag = cursor.execute("SELECT secret_flag FROM exercise9 WHERE id = 6").fetchone()[0]
+                flag = cursor.execute("SELECT hidden_column FROM exercise9 WHERE id = 3").fetchone()[0]
+                return "Congratulations! Level solved." if (flag == flag_input) else "Wrong flag."
+
+            case 10:
+                flag = cursor.execute("SELECT secret_flag FROM exercise10 WHERE id = 6").fetchone()[0]
                 return "Congratulations! Level solved." if (flag == flag_input) else "Wrong flag."
 
             case _:

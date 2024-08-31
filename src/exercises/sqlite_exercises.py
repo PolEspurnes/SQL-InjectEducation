@@ -319,31 +319,72 @@ def sqlite_exercise9():
     query = ""
 
     exercise = {
-        'name': 'Error-Based SQL Injection',
-        'description': 'Do a SQL injection that causes the application to generate an error message that reveals the hidden flag in exercise9 table.',
-        'hint': 'Search information about what could cause an error and about loading extensions.'
+        'name': 'SQL Injection on an INSERT query',
+        'description': 'Do a SQL injection on the INSERT query and get the flag hidden on the exercise9 table.',
+        'hint': 'Search information about concatenations.'
     }
 
     db = get_db()
     cursor = db.cursor()
-    products = cursor.execute("SELECT product_name, price, category FROM exercise9").fetchall()
+    products = cursor.execute("SELECT product_name, creation_date FROM exercise9").fetchall()
 
     
+    if request.method == 'POST':
+        # User input
+        if 'user_input' in request.form:
+            user_input = request.form['user_input']
 
-    if request.method == 'POST' and 'flag_input' in request.form:
-        flag_input = request.form['flag_input']
-        result = handle_flag(cursor, 9, flag_input)  # Solved like exercise 5
+            query = f"INSERT INTO exercise9 (product_name) VALUES ('{user_input}')"
+            try:
+                cursor.execute(query)
+                db.commit()
+                result = "New product added. Refresh the page to check the updated list."
+            except sqlite3.Error as e:
+                result = f"Error: {e}"
+
+        # Flag input
+        elif 'flag_input' in request.form:
+            flag_input = request.form['flag_input']
+            result = handle_flag(cursor, 10, flag_input)
 
 
         cursor.close()
         db.close()
         return render_template('sqlite_exercise9.html', exercise=exercise, result=result, query=query, products=products)
 
+    return render_template('sqlite_exercise9.html', exercise=exercise, products=products)
+
+
+def sqlite_exercise10():
+    result = ""
+    query = ""
+
+    exercise = {
+        'name': 'Error-Based SQL Injection',
+        'description': 'Do a SQL injection that causes the application to generate an error message that reveals the hidden flag in exercise10 table.',
+        'hint': 'Search information about what could cause an error and about loading extensions.'
+    }
+
+    db = get_db()
+    cursor = db.cursor()
+    products = cursor.execute("SELECT product_name, price, category FROM exercise10").fetchall()
+
+    
+
+    if request.method == 'POST' and 'flag_input' in request.form:
+        flag_input = request.form['flag_input']
+        result = handle_flag(cursor, 10, flag_input)
+
+
+        cursor.close()
+        db.close()
+        return render_template('sqlite_exercise10.html', exercise=exercise, result=result, query=query, products=products)
+
     elif request.method == 'GET' and 'filter' in request.args:
         compiled = re.compile(re.escape('UNION'), re.IGNORECASE) # Filtering out UNION
         filter_by = compiled.sub('', request.args['filter']) 
 
-        query = f"SELECT product_name, price, category FROM exercise9 WHERE category ='{filter_by}'"
+        query = f"SELECT product_name, price, category FROM exercise10 WHERE category ='{filter_by}'"
         try:
             products = cursor.execute(query).fetchall()
         except sqlite3.Error as e:
@@ -351,8 +392,8 @@ def sqlite_exercise9():
 
         cursor.close()
         db.close()
-        return render_template('sqlite_exercise9.html', exercise=exercise, result=result, query=query, products=products)
+        return render_template('sqlite_exercise10.html', exercise=exercise, result=result, query=query, products=products)
 
 
 
-    return render_template('sqlite_exercise9.html', exercise=exercise, products=products)
+    return render_template('sqlite_exercise10.html', exercise=exercise, products=products)

@@ -5,7 +5,7 @@
   <p class="text-center">Choose an exercise below:</p>
 
   <div class="mb-4">
-    <h3>SQLite Exercises</h3>
+    <h3>SQLite Injection Exercises</h3>
     <ul class="list-group">
       <li>
         <a href="{{ url_for('sqlite1') }}">Simple Injection</a>
@@ -32,19 +32,21 @@
         <a href="{{ url_for('sqlite8') }}">SQL Injection in ORDER BY clause</a>
       </li>
       <li>
-        <a href="{{ url_for('sqlite9') }}">Error-Based SQL Injection</a>
+        <a href="{{ url_for('sqlite9') }}">SQL Injection on an INSERT query</a>
+      </li>
+      <li>
+        <a href="{{ url_for('sqlite10') }}">Error-Based SQL Injection</a>
       </li>
       <!-- Add more SQLite exercises here -->
     </ul>
   </div>
 
   <div class="mb-4">
-    <h3>PostgreSQL Exercises</h3>
+    <h3>Notes and methodology</h3>
     <ul class="list-group">
       <li>
-        <a href="{{ url_for('postgresql1') }}">PostgreSQL Injection</a>
+        <a href="/">Injection</a>
       </li>
-      <!-- Add more PostgreSQL exercises here -->
     </ul>
   </div>
 {% endblock %}
